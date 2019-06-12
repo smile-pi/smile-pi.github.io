@@ -14,7 +14,12 @@
     </main>
 
     {% include footer.html %}
-    {% contentblock page_specific_scripts %}
+    <script type="text/javascript">  
+      {% include applications.js %}
+      {% include administer.js %}
+      {% include update_time.js %}  
+      {% include analytics.js %}        
+    </script>
     <script type="text/javascript">
     var $grid = $('.grid').masonry({
       // options

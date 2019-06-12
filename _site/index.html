@@ -1096,16 +1096,13 @@
 
 </div> <!-- .columns -->
 
-
-
       </div>
     </main>
 
     <footer class="site-footer">
 </footer>
-    
-<script type="text/javascript">      
-  $( document ).ready( function() {
+    <script type="text/javascript">  
+      $( document ).ready( function() {
   var savedUser = localStorage.getItem("who");
   if (savedUser) { $("#username").attr('value', savedUser); };  
 });
@@ -1160,7 +1157,60 @@ $('.resource-btn').on('click', function(ev) {
     window.open($(this).next("span.app_link").text());
   }
 });
-  //https://stackoverflow.com/a/4428396/178673
+      $ (document).ready(function(){
+  jQuery.post( "/smileService/usage", { who: localStorage.getItem("who"), who_uuid: localStorage.getItem("who_uuid"), what: "opened", message: "the administer page" } );
+  
+  
+  function isTeacher(e) {
+    var userName = localStorage.getItem("who");
+    
+    if (userName && userName.toLowerCase().includes('teacher') === true) {
+      return true; 
+    }
+    return false;
+  };
+
+  function powerOff(e) {
+    // check for teacher
+    var proceed = isTeacher();
+    var userName = (localStorage.getItem("who")) ? localStorage.getItem("who") : 'blank';
+  
+    if (proceed) {
+      // make the post to turn off plug
+      jQuery.post("/assets/scripts/service-goodnight.php");
+    } else {
+      window.alert('You must be a teacher to perform this task. If you are a teacher, add the word teacher to your name, which is currently ' + userName + '.');
+    }
+    return this;
+  };
+  
+  $("#plug-power-off").on('click', function(e){
+    powerOff();
+  });
+
+  $("#sync-system-date").on('click', function(e){
+    syncSystemDate();
+  });  
+});
+
+//     In the actual plug, replace http://localhost:5984/smile with /couchdb
+//     For testing locally, replace http://localhost:5984/couchdb with /smile
+$('#couchdb-export').on('click', function(){
+  var localTime = new Date();
+  var url = '/couchdb/_all_docs?include_docs=true'; 
+  $.get(url,function (result)
+  {
+      var blob=new Blob([result]);
+      var link=document.createElement('a');
+      link.href=window.URL.createObjectURL(blob);
+      link.download="smile_db_dump_"+localTime.getFullYear()+""+("0" + (localTime.getMonth() + 1)).slice(-2)+""+("0" + localTime.getDate()).slice(-2)+""+localTime.getHours()+""+localTime.getMinutes()+".txt";
+      link.click();
+  
+  });      
+});
+
+
+      //https://stackoverflow.com/a/4428396/178673
 Date.prototype.isSameDateAs = function(pDate) {
   return (
     this.getFullYear() === pDate.getFullYear() &&
@@ -1204,9 +1254,75 @@ function syncTheDates(st){
 
 syncSystemDate();
 
+  
+      // In the actual plug, get replace `http://localhost:5984/smile` with `/couchdb`
+$.get('/couchdb/_design/usage/_view/all?descending=true&include_docs=true&stale=update_after', function( data ) {
+  response = $.parseJSON(data);
+  $(function() {
+      $.each(response.rows, function(i, item) {
+          var $tr = $('<li class="user '+item.doc.who_uuid+'" data-filter-name="'+item.doc.who+'">').append(
+              '<a class="toggle-user" data-filter-uuid="'+ item.doc.who_uuid +'">'+item.doc.who +'</a> ',
+              item.doc.what, ' ',
+              item.doc.message, ' ',
+              timeSince(item.doc.when)
+          ).appendTo('#usage-log');
+          $('.toggle-user').on('click', toggleUser);
+      });
+  });
+});
 
-</script>
+function timeSince(date) {
+      var seconds = Math.floor((new Date() - new Date(date)) / 1000);
+      var interval = Math.floor(seconds / 31536000);
 
+      if (interval >= 1) {
+          return date;
+      }
+      interval = Math.floor(seconds / 2592000);
+      if (interval >= 1) {
+          return date;
+      }
+      interval = Math.floor(seconds / 86400);
+      if (interval >= 1) {
+          return interval + " day" + (interval !== 1 ? 's' : '' )+ " ago";
+      }
+      interval = Math.floor(seconds / 3600);
+      if (interval >= 1) {
+          return interval + " hour" + (interval !== 1 ? 's' : '' )+ " ago";
+      }
+      interval = Math.floor(seconds / 60);
+      if (interval >= 1) {
+          return interval + " minute" + (interval !== 1 ? 's' : '' )+ " ago";
+      }
+      interval = Math.floor(seconds);
+      return interval + " second" + (interval !== 1 ? 's' : '' )+ " ago";
+  };  
+  
+  $("#user-filter").keyup(function(e) {
+      var string = e.target.value.toLowerCase();
+      console.log(string);
+
+      // hide all lines
+      $("#usage-log li.user").hide();
+
+      // loop through all lines
+      $("#usage-log li.user").each(function(index) {
+          // if includes search string, show
+          if ($(this).data('filter-name').toLowerCase().includes(string)) {
+              $(this).show();
+          }
+      });
+  });
+  
+  function toggleUser (ev) {
+    
+        var uuid = $(ev.currentTarget).data('filter-uuid');
+        console.log(uuid);
+        // hide opacity for user ids
+        $("#usage-log li.user").css("opacity", 0.2);
+        $("#usage-log li.user." + uuid).css("opacity", 1);
+  };        
+    </script>
     <script type="text/javascript">
     var $grid = $('.grid').masonry({
       // options

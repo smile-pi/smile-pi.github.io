@@ -24,7 +24,6 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 markdown: kramdown
 plugins:
   - jekyll-feed
-  - jekyll-contentblocks
   
 languages: ["es", "en"]
 default_lang: "es"

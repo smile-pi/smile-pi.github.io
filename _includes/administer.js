@@ -1,19 +1,6 @@
 $ (document).ready(function(){
   jQuery.post( "/smileService/usage", { who: localStorage.getItem("who"), who_uuid: localStorage.getItem("who_uuid"), what: "opened", message: "the administer page" } );
   
-    // get ethernet IP if available
-  jQuery.get("/assets/scripts/get-eth0ip.php", function(data) {
-      if (data) {
-        $("#ethernet-ip").text(data.trim());
-      };      
-  });
-
-  // get wifi mac if possible
-  jQuery.get("/assets/scripts/get-wifimac.php", function(data) {
-      if (data) {
-        $("#wifi-mac").text(data.trim());
-      };   
-  });
   
   function isTeacher(e) {
     var userName = localStorage.getItem("who");
