@@ -128,10 +128,7 @@ $('.resource-btn').on('click', function(ev) {
     data: { who: localStorage.getItem("who"), who_uuid: localStorage.getItem("who_uuid"), what: "opened", message: "the " + id + " app" }
   });
   if ($(this).next("span.app_link").attr('id') === "smile") {
-    var smileUsername = localStorage.getItem("who");
-    var smileUUID = localStorage.getItem("who_uuid");
-    var smileLink = "/smileService/auth/lti?user=" + smileUsername + "&UUID=" + smileUUID;
-    window.open(smileLink);
+    window.open($(this).next("span.app_link").text());
   } else {
     window.open($(this).next("span.app_link").text());
   }

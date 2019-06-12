@@ -81,14 +81,6 @@ All Khan Academy content is available for free at www.khanacademy.org</p>
 
 
 
-<h3>Libros</h3>
-<p><br/>
-Public Domain<br/>
-<br/>
-</p>
-
-
-
 
 
 <h3>Blockly Games</h3>
@@ -169,7 +161,7 @@ The GCF Learn Free is available for free from http://www.gcflearnfree.org/</p>
 
 
 
-<h3>SMILE Draw and Paint</h3>
+<h3>SMILE-pi Draw and Paint</h3>
 <p>Copyright &copy; 2019, Reuben Thiessen<br/>
 MIT LICENSE<br/>
 https://github.com/smile-pi/smile_paint/<br/>
@@ -197,12 +189,6 @@ Creative Commons Licence<br/>
 https://africanstorybook.org<br/>
 </p>
 
-<h3>Fantastic Phonics</h3>
-<p><br/>
-<br/>
-<br/>
-</p>
-
 <h3>Cat & Dog</h3>
 <p>Copyright &copy; 2006-2017 - rené & elke leisink<br/>
 Non-commerical use.<br/>
@@ -219,6 +205,12 @@ https://www.seedsofempowerment.org<br/>
 <p>Copyright &copy; Respective Authors<br/>
 Non-commerical use.<br/>
 https://www.gutenberg.org/wiki/Main_Page<br/>
+</p>
+
+<h3>Libros</h3>
+<p><br/>
+Public Domain<br/>
+<br/>
 </p>
 
 <h3>Project Gutenberg</h3>
@@ -297,10 +289,7 @@ $('.resource-btn').on('click', function(ev) {
     data: { who: localStorage.getItem("who"), who_uuid: localStorage.getItem("who_uuid"), what: "opened", message: "the " + id + " app" }
   });
   if ($(this).next("span.app_link").attr('id') === "smile") {
-    var smileUsername = localStorage.getItem("who");
-    var smileUUID = localStorage.getItem("who_uuid");
-    var smileLink = "/smileService/auth/lti?user=" + smileUsername + "&UUID=" + smileUUID;
-    window.open(smileLink);
+    window.open($(this).next("span.app_link").text());
   } else {
     window.open($(this).next("span.app_link").text());
   }
